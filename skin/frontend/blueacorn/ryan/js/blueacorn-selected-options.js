@@ -12,17 +12,17 @@ Product.Config.prototype.configureElement = Product.Config.prototype.configureEl
             id: "changeOptionId",
             cancel: function (win) {
                 element.selectedIndex = element.prevIndex;
-                Product.Config.prototype.displayOptions();
+                this.displayOptions();
             },
             ok: function (win) {
-                Product.Config.prototype.displayOptions();
+                this.displayOptions();
                 return true;
             }
         });
         element.prevIndex = element.currentIndex;
         element.currentIndex = selectedIndex;
     } else {
-        Product.Config.prototype.displayOptions();
+        this.displayOptions();
     }
 });
 
