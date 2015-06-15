@@ -1,10 +1,6 @@
 Product.Config.prototype.configureElement = Product.Config.prototype.configureElement.wrap(function(parentMethod, element) {
     parentMethod(element);
 
-    var areAllSelected = this.settings.every(function(allAtr){
-        return Validation.validate(allAtr);
-    });
-
     var validate = Validation.validate(element);
     var selectedIndex = element.selectedIndex;
 
@@ -16,36 +12,38 @@ Product.Config.prototype.configureElement = Product.Config.prototype.configureEl
             id: "changeOptionId",
             cancel: function (win) {
                 element.selectedIndex = element.prevIndex;
-                displayOptions();
+                Product.Config.prototype.displayOptions();
             },
             ok: function (win) {
-                displayOptions();
+                Product.Config.prototype.displayOptions();
                 return true;
             }
         });
         element.prevIndex = element.currentIndex;
         element.currentIndex = selectedIndex;
     } else {
-        displayOptions();
-    }
-
-    function displayOptions() {
-
-        if ($('display-selected') != null){
-            $('display-selected').remove();
-        }
-        if (areAllSelected) {
-            var selectedOptions = '';
-
-            spConfig.settings.each(function (index) {
-                selectedOptions += index[index.selectedIndex].innerHTML + ', ';
-            });
-
-            selectedOptions = selectedOptions.replace(/,\s*$/, "");
-
-            $$('.product-options-bottom')[0].insert({
-                top: '<p id="display-selected" style="color:#3399cc">Your Selected Options: ' + selectedOptions + '</p>'
-            });
-        }
+        Product.Config.prototype.displayOptions();
     }
 });
+
+Product.Config.prototype.displayOptions = function(){
+    var areAllSelected = spConfig.settings.every(function(allAtr){
+        return Validation.validate(allAtr);
+    });
+
+    if ($('display-selected') != null){
+        $('display-selected').remove();
+    }
+    if (areAllSelected) {
+        var selectedOptions = '';
+        spConfig.settings.each(function (index) {
+            selectedOptions += index[index.selectedIndex].innerHTML + ', ';
+        });
+
+        selectedOptions = selectedOptions.replace(/,\s*$/, "");
+
+        $$('.product-options-bottom')[0].insert({
+            top: '<p id="display-selected" style="color:#3399cc">Your Selected Options: ' + selectedOptions + '</p>'
+        });
+    }
+}
